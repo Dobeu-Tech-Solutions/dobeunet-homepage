@@ -20,8 +20,8 @@
   # Feature Policy / Permissions Policy - restrict browser features
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
 
-  # Strict Transport Security - force HTTPS (uncomment when HTTPS is live)
-  # Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  # Strict Transport Security - force HTTPS
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
   # Cache Control for HTML (no cache)
   Cache-Control: public, max-age=0, must-revalidate

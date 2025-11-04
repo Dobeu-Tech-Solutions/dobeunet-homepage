@@ -1,7 +1,10 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "dobeunet-homepage",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Dobeu Tech Solutions - Marketing website for operational software targeting mid-market businesses",
+  "author": "Dobeu Tech Solutions",
+  "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "vite",
