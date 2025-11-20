@@ -75,7 +75,7 @@ jobs:
       - name: Check for secrets in code
         run: |
           echo "Checking for potential secrets..."
-          if grep -r -E '(password|secret|api[_-]?key|token|mongodb://|postgres://).*=.*["\']' src/ --exclude-dir=node_modules; then
+          if grep -r -E "(password|secret|api[_-]?key|token|mongodb://|postgres://).*=[\"']" src/ --exclude-dir=node_modules; then
             echo "⚠️ Potential hardcoded secrets found!"
             echo "Review the matches above"
             exit 1
