@@ -17,6 +17,9 @@
   
   # NPM version
   NPM_VERSION = "9"
+  
+  # Increase Node memory limit for builds
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 # Redirect all routes to index.html for SPA (Single Page Application) routing
 [[redirects]]
