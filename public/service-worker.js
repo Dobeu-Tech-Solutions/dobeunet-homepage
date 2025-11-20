@@ -1,4 +1,4 @@
-const CACHE_VERSION = '2';
+const CACHE_VERSION = '3'; // Incremented to force cache refresh
 const CACHE_NAME = `dobeu-static-v${CACHE_VERSION}`;
 const RUNTIME_CACHE = `dobeu-runtime-v${CACHE_VERSION}`;
 const IMAGE_CACHE = `dobeu-images-v${CACHE_VERSION}`;
@@ -59,6 +59,12 @@ self.addEventListener('fetch', (event) => {
 
   if (request.destination === 'image') {
     event.respondWith(cacheFirst(request, IMAGE_CACHE, CACHE_MAX_AGE.images));
+    return;
+  }
+
+  // For HTML, always try network first to avoid serving stale content
+  if (request.destination === 'document' || request.mode === 'navigate') {
+    event.respondWith(networkFirst(request));
     return;
   }
 

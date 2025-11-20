@@ -11,7 +11,8 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
+        // Keep console.error and console.warn for production debugging
+        drop_console: false,
         drop_debugger: true,
         pure_funcs: ['console.log', 'console.info', 'console.debug'],
       },
@@ -19,7 +20,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'lucide': ['lucide-react'],
         },
       },
@@ -27,6 +28,12 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
     cssCodeSplit: true,
+    // Ensure assets are properly referenced
+    assetsInlineLimit: 4096,
+    // Ensure proper module resolution
+    commonjsOptions: {
+      include: [/node_modules/],
+    },
   },
   server: {
     headers: {
@@ -35,4 +42,6 @@ export default defineConfig({
       'X-XSS-Protection': '1; mode=block',
     },
   },
+  // Ensure proper base path for production
+  base: '/',
 });
