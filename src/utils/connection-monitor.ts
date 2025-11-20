@@ -1,6 +1,5 @@
-import { supabase } from '../lib/supabase';
 import { logError } from './error-logger';
-import { createAppError, SupabaseError } from '../types/errors';
+import { createAppError } from '../types/errors';
 
 export enum ConnectionStatus {
   HEALTHY = 'HEALTHY',
@@ -53,15 +52,15 @@ class ConnectionMonitor {
     const startTime = Date.now();
 
     try {
+      // Health check via Netlify Function (MongoDB)
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Health check timeout')), this.HEALTH_CHECK_TIMEOUT_MS);
       });
 
-      const healthCheckPromise = supabase
-        .from('error_logs')
-        .select('id')
-        .limit(1)
-        .maybeSingle();
+      // Ping a simple health endpoint (the function itself validates connection)
+      const healthCheckPromise = fetch('/.netlify/functions/submit-lead', {
+        method: 'OPTIONS', // OPTIONS request for CORS check
+      });
 
       await Promise.race([healthCheckPromise, timeoutPromise]);
 
@@ -91,10 +90,7 @@ class ConnectionMonitor {
 
       if (this.health.consecutiveFailures >= this.MAX_CONSECUTIVE_FAILURES) {
         const appError = createAppError(
-          new SupabaseError(
-            error instanceof Error ? error.message : 'Health check failed',
-            'Database connection is unhealthy'
-          )
+          error instanceof Error ? error.message : 'Health check failed'
         );
         logError(appError, { healthCheck: true, consecutiveFailures: this.health.consecutiveFailures });
       }
