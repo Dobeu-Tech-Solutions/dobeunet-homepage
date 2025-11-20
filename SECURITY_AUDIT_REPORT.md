@@ -76,7 +76,7 @@ Content-Security-Policy:
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.apollo.io;
   style-src 'self' 'unsafe-inline';
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co;
+  connect-src 'self' https://app.apollo.io https://widget.intercom.io https://api-iam.intercom.io wss://*.intercom.io;
 ```
 
 **Note**: `unsafe-inline` and `unsafe-eval` are required for Apollo form enrichment script. This is an acceptable trade-off for the business value provided. Recommendation: Monitor for XSS attempts via error logging.
@@ -88,7 +88,7 @@ Content-Security-Policy:
 | Row Level Security (RLS) | ✅ Enabled | All 9 tables protected |
 | Anonymous Access | ✅ Limited | INSERT on leads table only |
 | Authenticated Access | ✅ Controlled | Service role for error logs |
-| SQL Injection Protection | ✅ Protected | Supabase SDK uses parameterized queries |
+  | SQL Injection Protection | ✅ Protected | MongoDB driver & parameterized queries |
 | SECURITY DEFINER Fix | ✅ Fixed | Removed from error_statistics view |
 | Search Path Injection | ✅ Fixed | Explicit search_path in functions |
 | Data Retention | ✅ Configured | 90-day auto-cleanup for error logs |
@@ -124,7 +124,7 @@ Content-Security-Policy:
 | Phone Validation | ✅ Client-side | Numeric format validation |
 | Required Fields | ✅ Client-side | Form validation hook |
 | Max Length | ✅ Client-side | Field length limits |
-| SQL Injection | ✅ Server-side | Supabase SDK parameterized queries |
+  | SQL Injection | ✅ Server-side | MongoDB driver parameterized operations |
 | XSS Protection | ✅ Framework | React auto-escapes output |
 
 ### 6. Error Handling & Logging ✅
@@ -158,7 +158,7 @@ Content-Security-Policy:
 | CDN | ✅ Via Hosting | Vercel/Netlify provides DDoS protection |
 | Caching | ✅ Implemented | Service worker + HTTP caching |
 
-**Recommendation**: Consider implementing server-side rate limiting via Cloudflare or Supabase Edge Functions to prevent abuse of the contact form.
+**Recommendation**: Consider implementing server-side rate limiting via Cloudflare or Netlify Edge Functions to prevent abuse of the contact form.
 
 ---
 
@@ -180,7 +180,7 @@ All critical security requirements are met for production deployment.
    - Prevents spam and abuse
 
 2. **Set Up Security Monitoring**
-   - Configure Supabase alerts for unusual database activity
+   - Configure MongoDB Atlas alerts for unusual database activity
    - Set up error log monitoring (check daily for spikes)
    - Consider Sentry or similar for advanced error tracking
 

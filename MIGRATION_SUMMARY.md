@@ -8,14 +8,14 @@
 
 ## 🎯 Mission Accomplished
 
-Successfully migrated the entire database infrastructure from **Supabase (PostgreSQL)** to **MongoDB Atlas** with a secure serverless architecture.
+Successfully migrated the entire database infrastructure to **MongoDB Atlas** with a secure serverless architecture.
 
 ---
 
 ## 📊 What Was Done
 
 ### 1. ✅ Database Migration
-- **From:** Supabase PostgreSQL with direct browser connections
+- **From:** Legacy SQL backend with direct browser connections
 - **To:** MongoDB Atlas with serverless Netlify Functions
 - **Collections Created:**
   - `leads` - Contact form submissions
@@ -59,7 +59,7 @@ Successfully migrated the entire database infrastructure from **Supabase (Postgr
 
 ## 🔐 Security Improvements
 
-| Before (Supabase) | After (MongoDB) |
+| Before (Legacy) | After (MongoDB) |
 |-------------------|-----------------|
 | Anon key exposed in frontend | Credentials secured in backend |
 | Direct browser → database | Browser → Functions → Database |
@@ -72,21 +72,18 @@ Successfully migrated the entire database infrastructure from **Supabase (Postgr
 
 ## ⚙️ Environment Variables
 
-### Before (Supabase)
+### Current Configuration
 ```bash
-VITE_SUPABASE_URL=https://qmwefqnbeipmbydhfcfj.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-### After (MongoDB)
-```bash
-MONGODB_URI=mongodb+srv://jeremyw_db_user:feZWyP9XWtYeanXC@dbe-dobeunet.0tw3wi9.mongodb.net/?appName=dbe-dobeunetpublish
+MONGODB_URI=mongodb+srv://<user>:<pass>@dbe-dobeunet.0tw3wi9.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=dobeunet
+MONGODB_LEADS_COLLECTION=leads
+LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 **Notes:**
-- Old variables are no longer needed
+- Only server-side variables required
 - MongoDB URI is set in Netlify (backend only)
-- Frontend has NO database credentials
+- Frontend has **no** database credentials
 
 ---
 
@@ -108,12 +105,12 @@ MONGODB_URI=mongodb+srv://jeremyw_db_user:feZWyP9XWtYeanXC@dbe-dobeunet.0tw3wi9.
 ```json
 {
   "dependencies": {
-    "@supabase/supabase-js": "^2.57.4"
+    "legacy-database-client": "archived"
   }
 }
 ```
 
-**Note:** Supabase packages can be removed once confirmed everything works. Keeping them for now as a safety measure.
+**Note:** Legacy database packages can be removed once confirmed everything works. Keeping them for now as a safety measure.
 
 ---
 
@@ -247,7 +244,7 @@ Before going live:
 
 ```bash
 # Branch: dev
-ace1736 - Migrate database from Supabase to MongoDB Atlas
+ace1736 - Migrate database to MongoDB Atlas
 9655fe4 - Add deployment status summary document
 8e9f460 - Add Netlify deployment fix and configuration
 8eb9b64 - Initial commit on dev branch
@@ -275,7 +272,7 @@ ace1736 - Migrate database from Supabase to MongoDB Atlas
 4. Merge `dev` to `main` when stable
 
 ### This Month
-1. Remove Supabase dependencies (optional)
+1. Remove legacy database dependencies (optional)
 2. Set up automated backups (MongoDB M10+)
 3. Monitor costs and usage
 4. Optimize function performance if needed
@@ -306,21 +303,12 @@ ace1736 - Migrate database from Supabase to MongoDB Atlas
 
 ### Rollback Plan
 
-If you need to revert to Supabase:
+If you ever need to revert to the previous implementation:
 
-1. **Keep these files** (don't delete yet):
-   - `src/lib/supabase.ts`
-   - `src/lib/supabase-enhanced.ts`
-
-2. **Revert changes:**
-   ```bash
-   git checkout main -- src/components/ContactModal.tsx
-   git checkout main -- src/utils/error-logger.ts
-   ```
-
-3. **Set Supabase env vars** in Netlify
-
-4. **Redeploy**
+1. Restore a commit from before `ace1736`
+2. Revert `src/components/ContactModal.tsx` and `src/utils/error-logger.ts`
+3. Rebuild/redeploy the application
+4. Re-apply environment variables required by that legacy stack
 
 ### Common Issues
 

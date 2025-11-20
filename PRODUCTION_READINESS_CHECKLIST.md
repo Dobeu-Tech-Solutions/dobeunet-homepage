@@ -28,7 +28,7 @@
 
 ### Performance & Caching
 - [x] **Service Worker** - PWA configured with offline caching strategies
-- [x] **Code Splitting** - React, Lucide, and Supabase split into separate chunks
+- [x] **Code Splitting** - React, Lucide, and vendor bundles split into separate chunks
 - [x] **Static Asset Caching** - 1 year cache for immutable assets
 - [x] **Image Caching** - 7 day cache for images
 - [x] **HTML Caching** - No-cache strategy for HTML files
@@ -48,8 +48,10 @@
 Before deploying, ensure these environment variables are configured in your hosting platform:
 
 ```bash
-VITE_SUPABASE_URL=your_actual_supabase_url
-VITE_SUPABASE_ANON_KEY=your_actual_supabase_anon_key
+MONGODB_URI=your_mongodb_connection_string
+MONGODB_DB_NAME=dobeunet
+MONGODB_LEADS_COLLECTION=leads
+LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 **Where to set them:**
@@ -64,12 +66,12 @@ VITE_SUPABASE_ANON_KEY=your_actual_supabase_anon_key
 - [ ] Verify https://dobeu.net loads correctly
 - [ ] Test www.dobeu.net (if applicable) redirects to dobeu.net
 
-### 3. Supabase Configuration
-- [ ] Verify Supabase project is on paid plan (if needed for production)
-- [ ] Add dobeu.net to allowed domains in Supabase dashboard
+### 3. MongoDB Atlas Configuration
+- [ ] Verify MongoDB Atlas project is active (M0+ cluster)
+- [ ] Add trusted IP addresses or VPC peering for Netlify functions
 - [ ] Test database connection from production environment
-- [ ] Verify RLS policies are active
-- [ ] Set up database backups (Supabase handles this, but verify)
+- [ ] Ensure database users follow least-privilege access
+- [ ] Configure cloud backups (enable continuous backup on paid tiers)
 
 ### 4. Apollo Integration
 - [ ] Verify Apollo appId in index.html is correct (currently: 68fcdf9e32f1ab0021599b24)
@@ -125,9 +127,9 @@ netlify deploy --prod
 
 #### Database Tests
 - [ ] Submit test lead through contact form
-- [ ] Verify lead appears in Supabase leads table
-- [ ] Test error logging (check error_logs table)
-- [ ] Verify cleanup function works (check old error logs are deleted)
+- [ ] Verify lead appears in MongoDB `leads` collection
+- [ ] Test error logging (check `error_logs` collection)
+- [ ] Verify cleanup index works (TTL removes logs older than 90 days)
 
 ## 🔒 Security Best Practices
 
@@ -149,7 +151,7 @@ netlify deploy --prod
 - **Rate Limiting**: Consider implementing rate limiting on API endpoints
 
 ### Recommended Security Monitoring
-1. **Set up Supabase monitoring alerts** for:
+1. **Set up MongoDB Atlas monitoring alerts** for:
    - Unusual database access patterns
    - Failed authentication attempts
    - Spike in error logs
@@ -185,8 +187,10 @@ vercel login
 vercel --prod
 
 # Set environment variables
-vercel env add VITE_SUPABASE_URL
-vercel env add VITE_SUPABASE_ANON_KEY
+vercel env add MONGODB_URI
+vercel env add MONGODB_DB_NAME
+vercel env add MONGODB_LEADS_COLLECTION
+vercel env add LEAD_ALERT_WEBHOOK_URL
 ```
 
 ### Netlify Deployment
@@ -204,7 +208,7 @@ netlify init
 netlify deploy --prod
 
 # Set environment variables via Netlify dashboard
-# Or use: netlify env:set VITE_SUPABASE_URL "your_value"
+# Or use: netlify env:set MONGODB_URI "your_value"
 ```
 
 ### Traditional Hosting (Static)
@@ -230,8 +234,8 @@ npm run build
 ## 🔄 Post-Launch Monitoring
 
 ### Week 1 After Launch
-- [ ] Monitor error_logs table daily
-- [ ] Check leads table for spam/bot submissions
+  - [ ] Monitor `error_logs` collection daily
+  - [ ] Check `leads` collection for spam/bot submissions
 - [ ] Review Lighthouse scores
 - [ ] Monitor uptime (use UptimeRobot or similar)
 - [ ] Check Google Search Console for crawl errors
@@ -246,7 +250,6 @@ npm run build
 ## 📝 Important URLs
 
 - **Production Site**: https://dobeu.net
-- **Supabase Dashboard**: https://app.supabase.com
 - **Apollo Dashboard**: https://app.apollo.io
 - **Security Headers Check**: https://securityheaders.com/?q=https://dobeu.net
 - **SSL Check**: https://www.ssllabs.com/ssltest/analyze.html?d=dobeu.net
@@ -260,14 +263,14 @@ npm run build
 **Issue**: White screen after deployment
 - Check browser console for errors
 - Verify environment variables are set correctly
-- Ensure Supabase URL and key are valid
+- Confirm Netlify build pulled the latest commit
 - Check if service worker is causing issues (clear cache)
 
 **Issue**: Contact form not working
-- Verify Supabase connection (check Network tab)
-- Check RLS policies on leads table
+- Verify MongoDB connection (check function response + logs)
+- Ensure MongoDB Atlas IP rules allow outbound traffic
 - Verify form validation is not blocking submission
-- Check error_logs table for error details
+- Check `error_logs` collection for error details
 
 **Issue**: Styles not loading
 - Clear browser cache

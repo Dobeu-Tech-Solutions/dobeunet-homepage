@@ -176,8 +176,8 @@
 ---
 
 ### 10. ✅ Legacy Database Clean-up
-- Deleted `supabase/` migrations and Supabase-specific runbooks/scripts
-- Removed Netlify + PowerShell helpers that referenced Supabase env vars
+- Deleted legacy SQL migrations and related runbooks/scripts
+- Removed Netlify + PowerShell helpers that referenced obsolete env vars
 - Ensured package manifests, env docs, and Netlify functions reference MongoDB exclusively
 - Clarified rollback path via `MONGODB_MIGRATION.md` (historical context only)
 

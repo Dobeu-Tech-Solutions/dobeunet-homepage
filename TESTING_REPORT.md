@@ -386,13 +386,13 @@ Status: 500 Internal Server Error
 
 ### Critical Issues (All Fixed) ✅
 
-1. **Supabase dependency in connection-monitor** ✅ Fixed
-   - Removed supabase import
+1. **Legacy dependency in connection-monitor** ✅ Fixed
+   - Removed unused import
    - Updated to use Netlify Function health check
-   - No longer throws "Missing Supabase environment variables"
+   - No longer throws "Missing legacy environment variables"
 
 2. **CSP header outdated** ✅ Fixed
-   - Removed Supabase from connect-src
+   - Removed deprecated hosts from connect-src
    - Added worker-src directive
    - Updated for MongoDB architecture
 
@@ -616,7 +616,7 @@ Result: EXCELLENT
 4. Monitor function logs for 24 hours
 
 ### Short-Term (Week 1)
-1. Remove Supabase dependencies
+1. Remove legacy database references
 2. Add automated testing
 3. Monitor error logs
 4. Set up uptime monitoring

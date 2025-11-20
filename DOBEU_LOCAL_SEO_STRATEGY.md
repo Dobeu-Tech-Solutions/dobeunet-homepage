@@ -1703,7 +1703,7 @@ showResults({
 - [ ] Build AP Automation Savings Calculator
 - [ ] Implement lead capture forms
 - [ ] Set up email automation (send PDF reports)
-- [ ] Create Supabase tables for storing calculator submissions
+- [ ] Add MongoDB collections/functions for storing calculator submissions
 
 **Month 1-3 KPIs:**
 - 10 pages indexed in Google

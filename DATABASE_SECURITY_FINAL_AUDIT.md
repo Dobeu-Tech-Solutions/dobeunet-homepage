@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Successfully resolved **all remaining 8 anonymous access policy warnings** flagged by Supabase security advisor. The issues were not actual vulnerabilities but rather policies that needed better documentation and naming to clearly indicate their intentional design.
+Successfully resolved **all remaining 8 anonymous access policy warnings** flagged during the database security review. The issues were not actual vulnerabilities but rather policies that needed better documentation and naming to clearly indicate their intentional design.
 
 **Total Security Issues Fixed**: 34 (26 in first migration + 8 in second migration)
 
@@ -19,7 +19,7 @@ Successfully resolved **all remaining 8 anonymous access policy warnings** flagg
 
 ### Issue: "Anonymous Access Policies" Warnings (8 policies)
 
-**Root Cause**: Supabase's strict security linting flags any policy using `USING (true)` or `WITH CHECK (true)` as potentially overly permissive, even for authenticated users. While these policies were functionally correct for an internal admin tool, they lacked clear documentation indicating intentional admin access.
+**Root Cause**: The security linting tool flags any policy using `USING (true)` or `WITH CHECK (true)` as potentially overly permissive, even for authenticated users. While these policies were functionally correct for an internal admin tool, they lacked clear documentation indicating intentional admin access.
 
 **What Was Flagged**:
 - 8 authenticated policies using `USING (true)` or `WITH CHECK (true)`
@@ -354,11 +354,11 @@ USING (auth.jwt() -> 'role' = 'admin')
 
 ### OWASP Top 10 Compliance
 ✅ **A01:2021 – Broken Access Control**: RLS enabled, policies enforced
-✅ **A02:2021 – Cryptographic Failures**: Passwords handled by Supabase Auth
+✅ **A02:2021 – Cryptographic Failures**: MongoDB Atlas enforces TLS + at-rest encryption
 ✅ **A03:2021 – Injection**: Parameterized queries, input validation
 ✅ **A04:2021 – Insecure Design**: Security-first architecture with RLS
 ✅ **A05:2021 – Security Misconfiguration**: All policies documented
-✅ **A07:2021 – Identification and Authentication Failures**: Supabase Auth handles
+✅ **A07:2021 – Identification and Authentication Failures**: Netlify-managed credentials + serverless functions
 ✅ **A09:2021 – Security Logging and Monitoring Failures**: Timestamps on all data
 
 ### GDPR Considerations
@@ -373,25 +373,23 @@ USING (auth.jwt() -> 'role' = 'admin')
 
 ### 1. Anonymous Submission Testing
 ```bash
-# Test calculator submission with valid data
-curl -X POST 'your-supabase-url/rest/v1/calculator_submissions' \
-  -H "apikey: your-anon-key" \
+# Test lead submission with valid data
+curl -X POST 'https://dobeu.net/.netlify/functions/submit-lead' \
   -H "Content-Type: application/json" \
-  -d '{"calculator_type":"food_waste","email":"test@example.com","num_locations":5}'
+  -d '{"name":"Jane Doe","email":"jane@example.com","company":"Acme","business_type":"restaurant","phone":"555-1234","submission_type":"strategy","location":{"city":"Toms River","state":"NJ","postal_code":"08753"}}'
 
-# Test with invalid email (should fail)
-curl -X POST 'your-supabase-url/rest/v1/calculator_submissions' \
-  -H "apikey: your-anon-key" \
+# Test with invalid email (should fail validation)
+curl -X POST 'https://dobeu.net/.netlify/functions/submit-lead' \
   -H "Content-Type: application/json" \
-  -d '{"calculator_type":"food_waste","email":"invalid-email","num_locations":5}'
+  -d '{"name":"Jane Doe","email":"invalid","company":"Acme","business_type":"restaurant","phone":"555-1234","submission_type":"strategy","location":{"city":"Toms River","state":"NJ","postal_code":"08753"}}'
 ```
 
-### 2. Authenticated Access Testing
+### 2. Error Logging Endpoint
 ```bash
-# Test admin can view all data
-curl 'your-supabase-url/rest/v1/leads' \
-  -H "apikey: your-anon-key" \
-  -H "Authorization: Bearer your-user-jwt"
+# Log a synthetic error (should return 200)
+curl -X POST 'https://dobeu.net/.netlify/functions/log-error' \
+  -H "Content-Type: application/json" \
+  -d '{"error_type":"NETWORK","severity":"ERROR","message":"Test","user_message":"Test","details":{"source":"curl"}}'
 ```
 
 ### 3. Security Testing

@@ -76,11 +76,15 @@ Prevents cascading failures by temporarily blocking requests to failing services
 ```typescript
 import { getCircuitBreaker } from './utils/circuit-breaker';
 
-const breaker = getCircuitBreaker('supabase-api');
+const breaker = getCircuitBreaker('mongodb-api');
 
 try {
   const result = await breaker.execute(() =>
-    supabase.from('table').select()
+    fetch('/.netlify/functions/submit-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
   );
 } catch (error) {
   // Circuit is open or request failed
@@ -191,7 +195,7 @@ import { MobileErrorBanner } from './components/MobileErrorUI';
 ```
 
 ### 8. **Connection Health Monitoring**
-Proactive monitoring of Supabase database connection.
+Proactive monitoring of the MongoDB-backed serverless endpoints.
 
 **File**: `src/utils/connection-monitor.ts`
 
@@ -299,7 +303,7 @@ try {
 ## 🔧 Configuration
 
 ### Environment Variables
-No additional environment variables required. All error handling works with existing Supabase configuration.
+No additional environment variables required. All error handling works with the existing MongoDB configuration.
 
 ### Circuit Breaker Tuning
 Edit `src/utils/circuit-breaker.ts`:
@@ -353,7 +357,7 @@ window.dispatchEvent(new Event('online'));
 ## 📊 Monitoring
 
 ### Error Logging
-All errors are automatically logged to Supabase `error_logs` table with:
+All errors are automatically logged to the `error_logs` MongoDB collection with:
 - Error type and severity
 - User context (user agent, URL)
 - Stack traces

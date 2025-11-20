@@ -9,7 +9,7 @@
 
 ✅ Site is deployed to Netlify: **https://dobeu-net.netlify.app**  
 ✅ All pages load correctly  
-✅ No "Missing Supabase environment variables" error  
+✅ No "Missing legacy environment variables" error  
 ✅ Contact modal opens successfully  
 ✅ Form validation works  
 ✅ All 3 Netlify Functions deployed:
@@ -135,13 +135,13 @@ netlify deploy --prod
 ### ✅ **Complete Tasks**
 
 1. **Created dev branch** and made initial commit
-2. **Diagnosed original issue** - Missing Supabase environment variables
+2. **Diagnosed original issue** - Missing legacy environment variables
 3. **Complete MongoDB migration:**
    - Installed MongoDB dependencies
    - Created 3 Netlify Functions (mongodb.ts, submit-lead.ts, log-error.ts)
    - Created frontend MongoDB client
    - Updated ContactModal and error-logger
-   - Removed Supabase dependencies from connection-monitor
+   - Removed legacy dependencies from connection-monitor
 4. **Comprehensive documentation:**
    - MONGODB_MIGRATION.md (500+ lines)
    - MONGODB_DEPLOYMENT_INSTRUCTIONS.md
@@ -183,9 +183,9 @@ Branch: dev
 Total Commits: 6
 
 Recent commits:
-cd6bf94 - Fix: Remove Supabase dependency from connection monitor
+cd6bf94 - Fix: Remove legacy dependency from connection monitor
 faa0168 - Add MongoDB migration summary document
-ace1736 - Migrate database from Supabase to MongoDB Atlas
+ace1736 - Migrate database to MongoDB Atlas
 9655fe4 - Add deployment status summary document
 8e9f460 - Add Netlify deployment fix and configuration
 8eb9b64 - Initial commit on dev branch

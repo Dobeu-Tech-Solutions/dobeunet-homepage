@@ -5,23 +5,16 @@
 
 ---
 
-## 🔄 Migration Summary
+## 🔄 Architecture Summary
 
-Successfully migrated the Dobeu.net homepage from **Supabase (PostgreSQL)** to **MongoDB Atlas** using serverless architecture.
+The Dobeu.net homepage now runs entirely on **MongoDB Atlas** via Netlify Functions. All database operations are handled server-side with validated payloads, credential rotation, and centralized logging.
 
-### What Changed
+### Current Stack
 
-**Before:**
-- Database: Supabase (PostgreSQL)
-- Connection: Direct browser to Supabase
-- Auth: Supabase anon key in frontend
-- Tables: PostgreSQL tables with RLS
-
-**After:**
-- Database: MongoDB Atlas
-- Connection: Serverless functions (Netlify Functions)
-- Auth: MongoDB credentials secured in backend
-- Collections: MongoDB collections with validation
+- **Database:** MongoDB Atlas (dobeunet cluster)
+- **Access Layer:** Netlify Functions (`submit-lead`, `log-error`, analytics helpers)
+- **Security:** Credentials stored in Netlify environment variables, access limited by Atlas IP rules
+- **Data Model:** `leads`, `error_logs`, and analytics collections with TTL indexes
 
 ---
 
@@ -207,22 +200,6 @@ src/utils/
 netlify.toml                # Added functions directory and updated env vars
 package.json                # Added mongodb and @netlify/functions
 ```
-
-### Files to Remove (Optional)
-
-These files are no longer needed but can be kept for reference:
-
-```
-src/lib/
-├── supabase.ts             # Old Supabase client
-└── supabase-enhanced.ts    # Old Supabase enhanced client
-
-supabase/                   # Old PostgreSQL migrations
-└── migrations/
-    └── *.sql
-```
-
----
 
 ## 🚀 Deployment Instructions
 
@@ -485,27 +462,13 @@ After deployment:
 4. Test function directly with curl
 5. Check MongoDB Atlas for connection issues
 
-### Issue: Old Supabase errors still appearing
+### Issue: Legacy error message still appears
 
 **Solution:**
 - Clear browser cache
 - Do a hard refresh (Ctrl+Shift+R)
-- Check that ContactModal.tsx is using `mongodb-client` not `supabase`
+- Confirm `ContactModal.tsx` imports `mongodb-client`
 - Redeploy with `netlify deploy --prod --force`
-
----
-
-## 🔄 Rollback Plan
-
-If you need to rollback to Supabase:
-
-1. Keep the `src/lib/supabase.ts` and `supabase-enhanced.ts` files
-2. Revert `ContactModal.tsx` changes
-3. Revert `error-logger.ts` changes
-4. Set Supabase environment variables back
-5. Redeploy
-
-**Note:** Both systems can coexist if needed during transition.
 
 ---
 

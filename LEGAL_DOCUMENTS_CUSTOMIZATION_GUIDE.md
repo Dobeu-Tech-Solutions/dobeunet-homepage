@@ -98,7 +98,7 @@ Before going live, verify:
 - [ ] Service level commitments are realistic
 
 ### Technical Accuracy
-- [ ] Supabase is correctly identified as database provider
+- [ ] MongoDB Atlas is correctly identified as database provider
 - [ ] POS integrations match what you support (Toast, Square, etc.)
 - [ ] Mobile app references are accurate (or removed if not applicable)
 - [ ] Data collection practices match your actual implementation

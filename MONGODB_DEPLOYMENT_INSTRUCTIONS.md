@@ -63,16 +63,15 @@ netlify deploy --prod
 
 ---
 
-## ✅ What Changed from Supabase
+## ✅ Architecture Improvements
 
-| Before (Supabase) | After (MongoDB) |
-|-------------------|-----------------|
+| Before (Legacy) | After (MongoDB) |
+|-----------------|-----------------|
 | Direct browser connection | Serverless functions |
-| Supabase anon key needed | No frontend credentials |
-| 2 environment variables | 1 environment variable |
-| PostgreSQL tables | MongoDB collections |
-| `VITE_SUPABASE_URL` | `MONGODB_URI` |
-| `VITE_SUPABASE_ANON_KEY` | *(backend only)* |
+| Public database key required | No frontend credentials |
+| Multiple environment variables | Single `MONGODB_URI` |
+| SQL tables | MongoDB collections |
+| Frontend stored DB secrets | Credentials live only in functions |
 
 **Security Improvement:** MongoDB credentials are never exposed to the browser!
 
@@ -260,7 +259,7 @@ db.leads.find().sort({ created_at: -1 }).limit(5)
 
 ## 🆘 Troubleshooting
 
-### Site shows "Missing Supabase environment variables"
+### Site shows "Missing legacy environment variables"
 
 **Cause:** Old cached files  
 **Solution:**

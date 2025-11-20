@@ -20,8 +20,10 @@ vercel --prod
 
 ### Step 3: Configure Environment Variables
 In Vercel Dashboard → Settings → Environment Variables, add:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- `MONGODB_URI`
+- `MONGODB_DB_NAME`
+- `MONGODB_LEADS_COLLECTION`
+- `LEAD_ALERT_WEBHOOK_URL`
 
 ### Step 4: Configure Custom Domain
 - Go to Settings → Domains
@@ -46,8 +48,10 @@ netlify deploy --prod
 
 ### Step 3: Configure Environment Variables
 In Netlify Dashboard → Site Settings → Environment, add:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+- `MONGODB_URI`
+- `MONGODB_DB_NAME`
+- `MONGODB_LEADS_COLLECTION`
+- `LEAD_ALERT_WEBHOOK_URL`
 
 ### Step 4: Configure Custom Domain
 - Go to Domain Settings
@@ -123,8 +127,10 @@ npm run lint
 
 Required in production:
 ```bash
-VITE_SUPABASE_URL=https://qmwefqnbeipmbydhfcfj.supabase.co
-VITE_SUPABASE_ANON_KEY=[your-key-from-.env]
+MONGODB_URI=mongodb+srv://<user>:<pass>@dbe-dobeunet.0tw3wi9.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=dobeunet
+MONGODB_LEADS_COLLECTION=leads
+LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 ---

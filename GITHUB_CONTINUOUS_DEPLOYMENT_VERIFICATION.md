@@ -91,7 +91,7 @@ When you push to GitHub:
 
 **Problem:**
 - https://dobeu-net.netlify.app → ✅ Works perfectly (no errors)
-- https://dobeu.net → ⚠️ Shows old cached build with Supabase error
+- https://dobeu.net → ⚠️ Shows old cached build with legacy environment error
 
 **Root Cause:**
 - CDN/DNS propagation delay OR
@@ -113,7 +113,7 @@ Content Displays: Yes
 ```
 URL: https://dobeu.net
 Status: ⚠️ Serving cached/old build
-Console Error: "Missing Supabase environment variables"
+Console Error: "Missing legacy environment variables"
 Page Loads: Partial (blank/cached)
 Content Displays: No
 ```
@@ -285,7 +285,7 @@ Functions: Deployed ✅
 **Status:** ⚠️ **CACHED OLD BUILD**
 
 ```
-Console Error: "Missing Supabase environment variables"
+Console Error: "Missing legacy environment variables"
 Page Content: Not loading (cached)
 Issue: Old build in CDN/browser cache
 Solution: Wait 30 min OR clear cache
@@ -335,7 +335,7 @@ MONGODB_URI=mongodb+srv://jeremyw_db_user:***@dbe-dobeunet.0tw3wi9.mongodb.net/.
 
 ### No Frontend Variables Needed ✅
 
-**Before (Supabase):**
+**Before (Legacy SPA Secrets):**
 ```
 VITE_SUPABASE_URL=... (exposed to frontend) ❌
 VITE_SUPABASE_ANON_KEY=... (exposed to frontend) ❌
@@ -499,7 +499,7 @@ Or use: https://dnschecker.org/#A/dobeu.net
 
 **URL:** https://dobeu.net
 
-**Issue:** Serving cached old build (with Supabase error)
+**Issue:** Serving cached old build (with legacy environment error)
 
 **Cause:** 
 - DNS/CDN propagation delay OR

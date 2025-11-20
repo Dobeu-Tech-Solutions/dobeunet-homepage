@@ -73,7 +73,7 @@ Conducted a comprehensive audit of the Dobeu.net codebase including:
 - Submission type enum validation
 
 ✅ **Security Headers** (Configured in `public/_headers`):
-- Content Security Policy (CSP) - Updated to remove Supabase, add worker-src
+- Content Security Policy (CSP) - Updated to remove deprecated hosts, add worker-src
 - X-Frame-Options: DENY (prevents clickjacking)
 - X-Content-Type-Options: nosniff (prevents MIME sniffing)
 - X-XSS-Protection: 1; mode=block
@@ -350,7 +350,7 @@ index.js                    162.01 kB │ gzip: 43.10 kB  ✅
 
 ### Bundle Analysis
 - Main bundle properly code-split
-- Vendor chunks separated (React, Lucide, Supabase legacy)
+- Vendor chunks separated (React, Lucide, application code)
 - CSS extracted and minimized
 - Aggressive caching for static assets
 - Lazy loading for routes
@@ -387,28 +387,23 @@ Configure MongoDB Atlas network access to allow connections from Netlify serverl
 
 ---
 
-### Priority 2: Remove Supabase Dependencies (Optional)
+### Priority 2: Remove Unused Legacy Artifacts (Optional)
 **Status:** 🟡 **RECOMMENDED** (Not Critical)
 
-The Supabase client library is still in the bundle (`supabase-0Uui0LCU.js` - 127 KB).
+Legacy SQL helpers and packages can now be deleted to keep the codebase lean.
 
 **Benefits of Removal:**
-- Smaller bundle size (~127 KB reduction)
-- Cleaner dependencies
-- Faster build times
+- Slightly smaller bundle size
+- Cleaner `package.json`
+- Less confusion for future contributors
 
-**Files to Remove:**
-```
-src/lib/supabase.ts
-src/lib/supabase-enhanced.ts
-```
+**Action Items:**
+1. Delete any unused legacy client files from `src/lib/`
+2. Remove matching entries from `package.json`
+3. Run `npm install` to refresh lockfile
+4. Re-run `npm run build` to verify bundle contents
 
-**Dependencies to Uninstall:**
-```bash
-npm uninstall @supabase/supabase-js
-```
-
-**Risk:** Low - supabase.ts is no longer referenced in active code
+**Risk:** Low - legacy code paths are already unused
 
 ---
 
@@ -537,7 +532,6 @@ Latest: Vite 7.x
 | Package | Version | Status | Notes |
 |---------|---------|--------|-------|
 | @intercom/messenger-js-sdk | 0.0.18 | ✅ Current | Chat widget |
-| @supabase/supabase-js | 2.57.4 | ⚠️ Unused | Can be removed |
 | @tailwindcss/typography | 0.5.19 | ✅ Current | Typography styles |
 | lucide-react | 0.344.0 | ✅ Current | Icons |
 | react | 18.3.1 | ✅ Current | Core library |
@@ -551,9 +545,8 @@ All current and appropriate for development.
 
 ### Recommendations
 
-1. **Remove @supabase/supabase-js** (saves ~127 KB)
-2. **Monitor lucide-react** for updates
-3. **Keep React at 18.x** (stable, well-supported)
+1. **Monitor lucide-react** for updates
+2. **Keep React at 18.x** (stable, well-supported)
 
 ---
 
@@ -620,7 +613,7 @@ dist/
 3. ~~ESLint warnings~~ → Fixed
 4. ~~Regex escaping issues~~ → Fixed
 5. ~~React Fast Refresh warning~~ → Fixed (moved useToast to separate file)
-6. ~~CSP headers reference old Supabase~~ → Fixed (updated to MongoDB)
+6. ~~CSP headers reference deprecated hosts~~ → Fixed (updated to MongoDB)
 
 ---
 
@@ -640,7 +633,7 @@ dist/
    - Removed unused imports
 
 3. **Updated Security Headers**
-   - Removed Supabase from CSP
+   - Removed deprecated hosts from CSP
    - Added worker-src directive
    - Updated connect-src for Netlify Functions
 
@@ -765,7 +758,7 @@ dist/
 3. Verify data appears in MongoDB
 
 ### Short Term (Week 1)
-1. Remove Supabase dependencies (saves 127 KB)
+1. Remove legacy database dependencies (saves ~127 KB)
 2. Monitor error logs in MongoDB
 3. Set up uptime monitoring
 4. Add custom domain dobeu.net

@@ -178,17 +178,17 @@ Based on implementation quality:
 - Source maps disabled (prevent code inspection)
 - Development headers configured
 
-### 3.3 Supabase Security
+### 3.3 MongoDB Security
 
 **Environment Variables:**
-- Properly configured with VITE_ prefix
-- Anonymous key used (public-safe)
-- Connection verified to Supabase project
+- Stored in Netlify / Vercel project settings
+- No credentials exposed to frontend
+- Connection verified to MongoDB Atlas cluster
 
-**Row Level Security:**
-- Existing Supabase tables have RLS enabled
-- Leads table properly configured
-- Insert operations properly scoped
+**Access Controls:**
+- Database users scoped to `dobeunet` database
+- Netlify Functions enforce validation before writes
+- TTL indexes clean up error logs automatically
 
 ### 3.4 Third-Party Script Security
 
@@ -206,26 +206,24 @@ Based on implementation quality:
 
 **Production Build Results:**
 ```
-dist/index.html                         9.90 kB │ gzip:  2.98 kB
-dist/assets/index-DnE6x8MX.css         35.11 kB │ gzip:  6.43 kB
-dist/assets/lucide-CMudDzj1.js          6.28 kB │ gzip:  2.53 kB
-dist/assets/index-DrSgr5F5.js          43.99 kB │ gzip: 10.19 kB
-dist/assets/supabase-DQPyJDFF.js      126.98 kB │ gzip: 32.66 kB
-dist/assets/react-vendor-Dq_i0H7_.js  139.94 kB │ gzip: 44.87 kB
+dist/index.html                         9.85 kB │ gzip:  2.97 kB
+dist/assets/index-DeSmPNH_.css         58.23 kB │ gzip:  9.67 kB
+dist/assets/lucide-BVnSyo7G.js          7.48 kB │ gzip:  2.95 kB
+dist/assets/index-C-AjzPjI.js         167.57 kB │ gzip: 43.99 kB
+dist/assets/react-vendor-D-XgqoRR.js  139.62 kB │ gzip: 44.81 kB
 ```
 
-**Total JavaScript:** 317.19 KB (original) → 90.25 KB (gzipped)
-**Compression Ratio:** 71.5% reduction
-**CSS:** 35.11 KB (original) → 6.43 KB (gzipped)
-**Compression Ratio:** 81.7% reduction
+**Total JavaScript:** 314.67 KB (original) → 91.75 KB (gzipped)
+**Compression Ratio:** 70.8% reduction
+**CSS:** 58.23 KB (original) → 9.67 KB (gzipped)
+**Compression Ratio:** 83.4% reduction
 
 ### 4.2 Code Splitting Strategy
 
 **Vendor Chunks (Manual Splitting):**
-1. **react-vendor** (139.94 KB) - React and ReactDOM
-2. **supabase** (126.98 KB) - Supabase client library
-3. **lucide** (6.28 KB) - Icon library
-4. **index** (43.99 KB) - Application code
+1. **react-vendor** (139.62 KB) - React and ReactDOM
+2. **lucide** (7.48 KB) - Icon library
+3. **index** (167.57 KB) - Application code + Netlify integrations
 
 **Benefits:**
 - Improved caching (vendor code changes infrequently)
@@ -355,14 +353,16 @@ Based on build output and best practices:
 
 **Required Environment Variables:**
 ```bash
-VITE_SUPABASE_URL=https://qmwefqnbeipmbydhfcfj.supabase.co
-VITE_SUPABASE_ANON_KEY=[your-anon-key]
+MONGODB_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=dobeunet
+MONGODB_LEADS_COLLECTION=leads
+LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 **Verification:**
-- ✅ Variables properly prefixed with `VITE_`
-- ✅ Imported correctly in codebase
-- ✅ Supabase connection tested
+- ✅ Secrets stored in hosting provider dashboard
+- ✅ Loaded into Netlify Functions automatically
+- ✅ MongoDB Atlas connection tested
 - ✅ Forms submit successfully
 
 ---
@@ -404,7 +404,7 @@ src/
 ├── hooks/
 │   └── use-scroll-animation.ts (Custom scroll hook)
 └── lib/
-    ├── supabase.ts (Database client)
+    ├── mongodb-client.ts (API helper for Netlify Functions)
     └── theme-init.ts (Theme management)
 ```
 
@@ -427,7 +427,7 @@ src/
 - [ ] Navigation scrolls to correct sections
 - [ ] Contact modal opens and closes
 - [ ] Form validation works
-- [ ] Form submits to Supabase
+  - [ ] Form submits via Netlify Functions to MongoDB
 - [ ] Apollo meeting scheduler integration
 - [ ] Dark mode toggle functions
 - [ ] Scroll-to-top button works
@@ -473,7 +473,7 @@ src/
 - [ ] Review Google Analytics data
 - [ ] Check search console impressions
 - [ ] Monitor keyword rankings
-- [ ] Review Supabase usage
+  - [ ] Review MongoDB Atlas metrics
 - [ ] Update dependencies if needed
 
 ---
@@ -631,8 +631,8 @@ Based on the DOBEU_LOCAL_SEO_STRATEGY.md:
    - Apollo script could fail to load
    - Mitigation: Graceful degradation implemented
 
-3. **Supabase Downtime** (Low)
-   - Database could be unavailable
+3. **MongoDB Downtime** (Low)
+   - Atlas cluster could be unavailable
    - Mitigation: Form shows appropriate error message
 
 **SEO Risks:**
@@ -808,7 +808,7 @@ Based on the DOBEU_LOCAL_SEO_STRATEGY.md:
 **Technical Support:**
 - Lead Developer: [To be added]
 - DevOps Team: [To be added]
-- Supabase Project: qmwefqnbeipmbydhfcfj.supabase.co
+- MongoDB Atlas Cluster: dbe-dobeunet (M0)
 
 **Resources:**
 - GitHub Repository: [To be added]

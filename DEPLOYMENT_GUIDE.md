@@ -9,8 +9,10 @@ This guide provides step-by-step instructions for deploying the Dobeu Tech Solut
 Ensure all environment variables are properly configured in your hosting platform:
 
 ```bash
-VITE_SUPABASE_URL=https://qmwefqnbeipmbydhfcfj.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+MONGODB_URI=mongodb+srv://<user>:<pass>@dbe-dobeunet.0tw3wi9.mongodb.net/?retryWrites=true&w=majority
+MONGODB_DB_NAME=dobeunet
+MONGODB_LEADS_COLLECTION=leads
+LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 ### 2. Build Verification
@@ -34,7 +36,7 @@ npm run preview
 ```
 
 ### 3. Testing Checklist
-- [ ] All forms submit correctly to Supabase
+- [ ] All forms submit correctly via Netlify Functions
 - [ ] Dark mode toggle works across all components
 - [ ] Navigation links scroll to correct sections
 - [ ] Apollo meeting scheduler integration works
@@ -63,7 +65,7 @@ npm run preview
 
 4. **Configure Environment Variables**:
    - Go to Settings → Environment Variables
-   - Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`
+   - Add `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, `LEAD_ALERT_WEBHOOK_URL`
 
 ### Option 2: Netlify
 
@@ -84,7 +86,7 @@ npm run preview
 
 4. **Configure Environment Variables**:
    - Go to Site Settings → Build & Deploy → Environment
-   - Add environment variables
+   - Add `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, `LEAD_ALERT_WEBHOOK_URL`
 
 ### Option 3: Traditional Web Server (Apache/Nginx)
 
@@ -127,7 +129,7 @@ npm run preview
        add_header X-Content-Type-Options "nosniff" always;
        add_header X-XSS-Protection "1; mode=block" always;
        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-       add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.apollo.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co;" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://assets.apollo.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://app.apollo.io https://widget.intercom.io https://api-iam.intercom.io wss://*.intercom.io;" always;
 
        # Gzip Compression
        gzip on;
@@ -226,7 +228,7 @@ sudo certbot renew --dry-run
 - [ ] Website loads at https://dobeu.net
 - [ ] SSL certificate is valid and shows in browser
 - [ ] All pages and sections load correctly
-- [ ] Forms submit to Supabase successfully
+- [ ] Forms submit via Netlify Functions and persist to MongoDB
 - [ ] Dark mode works across the site
 - [ ] Mobile responsive design works properly
 - [ ] Apollo meeting scheduler integration functions
@@ -320,7 +322,7 @@ npm run preview
 - Solution: Ensure SPA routing is configured in web server (see Nginx/Apache examples above)
 
 **Environment Variables Not Working**
-- Solution: Verify variables start with `VITE_` prefix
+- Solution: Verify `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, and `LEAD_ALERT_WEBHOOK_URL` are set in hosting dashboard
 - Solution: Rebuild application after adding variables
 
 **SSL Certificate Issues**
@@ -331,9 +333,9 @@ npm run preview
 - Solution: Check file paths are correct (relative to public directory)
 - Solution: Verify image files are included in build output
 
-**Supabase Connection Failures**
+**MongoDB Connection Failures**
 - Solution: Verify environment variables are set correctly
-- Solution: Check Supabase project status and API keys
+- Solution: Check MongoDB Atlas network access rules and database user credentials
 
 ## Support
 
