@@ -5,10 +5,12 @@ import App from './App.tsx';
 import './index.css';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/ToastContainer';
-import { registerServiceWorker } from './utils/register-service-worker';
 import { startConnectionMonitoring } from './utils/connection-monitor';
+import { cleanupLegacyServiceWorkers } from './utils/legacy-service-worker-cleanup';
 
-registerServiceWorker();
+if (import.meta.env.PROD) {
+  void cleanupLegacyServiceWorkers();
+}
 startConnectionMonitoring();
 
 createRoot(document.getElementById('root')!).render(
