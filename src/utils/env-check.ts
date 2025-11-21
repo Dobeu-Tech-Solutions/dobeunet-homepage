@@ -9,8 +9,8 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabaseConfig = SUPABASE_URL && SUPABASE_ANON_KEY
   ? {
-    url: SUPABASE_URL as string,
-    anonKey: SUPABASE_ANON_KEY as string,
+    url: SUPABASE_URL,
+    anonKey: SUPABASE_ANON_KEY,
   }
   : null;
 
