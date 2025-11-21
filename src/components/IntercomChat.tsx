@@ -1,22 +1,22 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * Intercom Chat Component
  *
  * Integrates Intercom Messenger for customer support and engagement.
- * Lazy loads Intercom after the page is fully interactive to prevent blocking render.
- * CRITICAL: This is loaded asynchronously to avoid breaking the page if blocked by ad-blockers.
+ * Dynamically imports Intercom SDK and defers initialization to avoid blocking page load.
+ * CRITICAL: Loaded asynchronously to prevent breaking the page if blocked by ad-blockers.
  */
 export default function IntercomChat() {
   useEffect(() => {
-    // Defer Intercom loading until after the page is interactive
+    // Defer Intercom loading until after the page is fully interactive
     // This prevents blocking the critical render path
     const loadIntercom = async () => {
       try {
         // Wait for page to be fully loaded before loading Intercom
-        if (document.readyState !== "complete") {
+        if (document.readyState !== 'complete') {
           await new Promise((resolve) => {
-            window.addEventListener("load", resolve, { once: true });
+            window.addEventListener('load', resolve, { once: true });
           });
         }
 
@@ -25,21 +25,17 @@ export default function IntercomChat() {
 
         // Dynamically import Intercom SDK to avoid blocking main bundle
         const { default: Intercom } = await import(
-          "@intercom/messenger-js-sdk"
+          '@intercom/messenger-js-sdk'
         );
 
         // Initialize Intercom with app ID
         Intercom({
-          app_id: "xu0gfiqb",
+          app_id: 'xu0gfiqb',
         });
-
-        console.info(
-          "[Intercom] Messenger initialized successfully (deferred)",
-        );
-      } catch (error) {
+      } catch {
         // Gracefully handle Intercom initialization errors
         // Don't break the app if Intercom fails to load or is blocked
-        console.warn("[Intercom] Failed to initialize (non-critical):", error);
+        // Silent failure - Intercom is non-critical
       }
     };
 
