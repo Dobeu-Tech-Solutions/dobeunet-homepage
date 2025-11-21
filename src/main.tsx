@@ -5,11 +5,9 @@ import App from './App.tsx';
 import './index.css';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/ToastContainer';
-import { registerServiceWorker } from './utils/register-service-worker';
-import { startConnectionMonitoring } from './utils/connection-monitor';
 
-registerServiceWorker();
-startConnectionMonitoring();
+// Service worker removed - causes caching issues in production
+// Connection monitoring removed - was blocking startup with failed health checks
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

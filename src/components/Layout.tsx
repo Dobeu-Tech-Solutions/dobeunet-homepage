@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navigation from './Navigation';
 import Footer from './Footer';
-import NetworkStatus from './NetworkStatus';
 import IntercomChat from './IntercomChat';
 
 export default function Layout() {
@@ -15,7 +14,6 @@ export default function Layout() {
         Skip to main content
       </a>
 
-      <NetworkStatus />
       <IntercomChat />
       <Navigation />
 

@@ -134,10 +134,19 @@
 
   /*
     Smooth Transitions
-    Applies to theme changes for visual polish
+    Applied to specific elements for performance
     Uses reduced motion for accessibility
   */
-  * {
+  body,
+  .bg-primary,
+  .bg-secondary,
+  .bg-tertiary,
+  .bg-elevated,
+  button,
+  a,
+  input,
+  textarea,
+  select {
     transition-property: background-color, border-color, color, fill, stroke;
     transition-duration: var(--transition-duration);
     transition-timing-function: var(--transition-timing);
@@ -145,7 +154,16 @@
 
   /* Respect user's motion preferences */
   @media (prefers-reduced-motion: reduce) {
-    * {
+    body,
+    .bg-primary,
+    .bg-secondary,
+    .bg-tertiary,
+    .bg-elevated,
+    button,
+    a,
+    input,
+    textarea,
+    select {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
     }

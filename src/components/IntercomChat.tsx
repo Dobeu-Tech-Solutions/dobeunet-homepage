@@ -5,29 +5,28 @@ import Intercom from '@intercom/messenger-js-sdk';
  * Intercom Chat Component
  *
  * Integrates Intercom Messenger for customer support and engagement.
- * Initializes once when the component mounts and is available across all pages.
+ * Deferred initialization to avoid blocking page load.
  */
 export default function IntercomChat() {
   useEffect(() => {
-    try {
-      // Initialize Intercom with app ID
-      Intercom({
-        app_id: 'xu0gfiqb',
-      });
+    // Defer Intercom initialization until after page is interactive
+    const timeoutId = setTimeout(() => {
+      try {
+        // Initialize Intercom with app ID
+        Intercom({
+          app_id: 'xu0gfiqb',
+        });
+      } catch (error) {
+        // Gracefully handle Intercom initialization errors
+        // Don't break the app if Intercom fails to load
+        // Removed console.error to reduce noise in production
+      }
+    }, 2000); // Delay 2 seconds to allow page to fully load
 
-      console.info('[Intercom] Messenger initialized successfully');
-    } catch (error) {
-      // Gracefully handle Intercom initialization errors
-      // Don't break the app if Intercom fails to load
-      console.error('[Intercom] Failed to initialize:', error);
-    }
-
-    // Cleanup function (optional, but good practice)
     return () => {
-      // Intercom cleanup is handled automatically by the SDK
-      // This is here for future enhancements if needed
+      clearTimeout(timeoutId);
     };
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   // This component doesn't render anything visible
   // Intercom messenger appears as a widget on the page

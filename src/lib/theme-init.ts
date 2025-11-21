@@ -46,7 +46,6 @@ export function getThemeInitScript(): string {
           return localStorage.getItem(key);
         } catch (e) {
           // localStorage may be unavailable (private browsing, etc.)
-          console.warn('localStorage unavailable:', e);
           return null;
         }
       }
@@ -105,7 +104,6 @@ export function getCurrentTheme(): Theme {
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     return stored || 'system';
   } catch (e) {
-    console.warn('Could not read theme preference:', e);
     return 'system';
   }
 }
@@ -136,7 +134,7 @@ export function setTheme(theme: Theme): void {
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch (e) {
-    console.warn('Could not save theme preference:', e);
+    // Silently fail if localStorage is unavailable
   }
 
   applyTheme(theme);

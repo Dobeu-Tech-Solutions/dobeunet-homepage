@@ -1,5 +1,5 @@
 import { logError as logErrorToMongo } from '../lib/mongodb-client';
-import { AppError, ErrorSeverity } from '../types/errors';
+import { AppError } from '../types/errors';
 
 interface ErrorLog extends AppError {
   user_agent?: string;
@@ -21,10 +21,7 @@ export async function logError(error: AppError, additionalContext?: Record<strin
     details: { ...error.details, ...additionalContext },
   };
 
-  if (shouldLogToConsole(error.severity)) {
-    console.error('[Error Logger]', errorLog);
-  }
-
+  // Errors are logged to server, no need for console in production
   ERROR_LOG_QUEUE.push(errorLog);
 
   if (ERROR_LOG_QUEUE.length >= MAX_QUEUE_SIZE) {
@@ -65,13 +62,8 @@ async function flushErrorLogs(): Promise<void> {
       )
     );
   } catch (err) {
-    console.error('[Error Logger] Exception while flushing logs:', err);
     // Don't re-queue on failure with MongoDB - the logError function already handles failures
   }
-}
-
-function shouldLogToConsole(severity: ErrorSeverity): boolean {
-  return severity === ErrorSeverity.ERROR || severity === ErrorSeverity.CRITICAL;
 }
 
 if (typeof window !== 'undefined') {

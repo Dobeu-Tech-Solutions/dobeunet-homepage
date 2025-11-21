@@ -1,12 +1,12 @@
-const CACHE_VERSION = '2';
+const CACHE_VERSION = '3';
 const CACHE_NAME = `dobeu-static-v${CACHE_VERSION}`;
 const RUNTIME_CACHE = `dobeu-runtime-v${CACHE_VERSION}`;
 const IMAGE_CACHE = `dobeu-images-v${CACHE_VERSION}`;
 
 const CACHE_MAX_AGE = {
-  static: 30 * 24 * 60 * 60 * 1000,
-  runtime: 24 * 60 * 60 * 1000,
-  images: 7 * 24 * 60 * 60 * 1000
+  static: 24 * 60 * 60 * 1000, // Reduced from 30 days to 1 day
+  runtime: 60 * 60 * 1000, // Reduced from 24 hours to 1 hour
+  images: 24 * 60 * 60 * 1000 // Reduced from 7 days to 1 day
 };
 
 const PRECACHE_URLS = [

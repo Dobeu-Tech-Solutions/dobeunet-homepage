@@ -72,7 +72,6 @@ export async function submitLead(
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('Error submitting lead:', data);
       return { success: false, error: data.error || 'Failed to submit lead' };
     }
 
@@ -82,7 +81,6 @@ export async function submitLead(
       priority: data.priority,
     };
   } catch (error) {
-    console.error('Unexpected error submitting lead:', error);
     return { success: false, error: 'An unexpected error occurred' };
   }
 }
@@ -113,7 +111,6 @@ export async function logError(errorLog: ErrorLog): Promise<void> {
     // Don't throw if error logging fails - we don't want to break the app
   } catch (error) {
     // Silently fail - error logging should never break the app
-    console.error('Failed to log error to server:', error);
   }
 }
 
