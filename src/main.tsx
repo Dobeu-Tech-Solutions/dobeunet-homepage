@@ -8,8 +8,15 @@ import { ToastProvider } from './components/ToastContainer';
 import { registerServiceWorker } from './utils/register-service-worker';
 import { startConnectionMonitoring } from './utils/connection-monitor';
 
-registerServiceWorker();
-startConnectionMonitoring();
+const enableHealthMonitor = import.meta.env.VITE_ENABLE_HEALTH_MONITOR === 'true';
+
+if (import.meta.env.PROD) {
+  registerServiceWorker();
+}
+
+if (import.meta.env.PROD || enableHealthMonitor) {
+  startConnectionMonitoring();
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -27,9 +27,10 @@ class ConnectionMonitor {
 
   private listeners: Array<(health: ConnectionHealth) => void> = [];
   private checkInterval: NodeJS.Timeout | null = null;
-  private readonly CHECK_INTERVAL_MS = 30000;
+  private readonly CHECK_INTERVAL_MS = 60000;
   private readonly HEALTH_CHECK_TIMEOUT_MS = 5000;
   private readonly MAX_CONSECUTIVE_FAILURES = 3;
+  private readonly HEALTH_ENDPOINT = '/.netlify/functions/health';
 
   start(): void {
     if (this.checkInterval) return;
@@ -52,17 +53,20 @@ class ConnectionMonitor {
     const startTime = Date.now();
 
     try {
-      // Health check via Netlify Function (MongoDB)
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Health check timeout')), this.HEALTH_CHECK_TIMEOUT_MS);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.HEALTH_CHECK_TIMEOUT_MS);
+
+      const response = await fetch(this.HEALTH_ENDPOINT, {
+        method: 'GET',
+        cache: 'no-store',
+        signal: controller.signal,
       });
 
-      // Ping a simple health endpoint (the function itself validates connection)
-      const healthCheckPromise = fetch('/.netlify/functions/submit-lead', {
-        method: 'OPTIONS', // OPTIONS request for CORS check
-      });
+      clearTimeout(timeoutId);
 
-      await Promise.race([healthCheckPromise, timeoutPromise]);
+      if (!response.ok) {
+        throw new Error(`Health endpoint returned ${response.status}`);
+      }
 
       const latency = Date.now() - startTime;
 

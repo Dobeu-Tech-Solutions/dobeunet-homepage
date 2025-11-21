@@ -1,10 +1,15 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 
-// MongoDB connection string from environment variable
-const MONGODB_URI = process.env.MONGODB_URI || '';
+const DEFAULT_DB_NAME = process.env.MONGODB_DB_NAME || 'dobeunet';
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
+function getMongoUri(): string {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error(
+      '[MongoDB] Missing MONGODB_URI environment variable. Configure it in Netlify -> Site settings -> Build & deploy -> Environment.'
+    );
+  }
+  return uri;
 }
 
 // Global variable to cache the MongoDB client across function invocations
@@ -25,13 +30,14 @@ export async function connectToDatabase(): Promise<MongoClient> {
       return cachedClient;
     } catch (error) {
       // Connection is dead, reset and reconnect
-      console.warn('Cached MongoDB connection is dead, reconnecting...');
+      const reason = error instanceof Error ? error.message : String(error);
+      console.warn('Cached MongoDB connection is dead, reconnecting...', reason);
       cachedClient = null;
     }
   }
 
   // Create new client with optimized connection pool settings
-  const client = new MongoClient(MONGODB_URI, {
+  const client = new MongoClient(getMongoUri(), {
     maxPoolSize: 10, // Maximum number of connections in the pool
     minPoolSize: 2, // Minimum number of connections to maintain
     maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
@@ -78,7 +84,7 @@ export async function connectToDatabase(): Promise<MongoClient> {
  */
 export async function getDatabase(): Promise<Db> {
   const client = await connectToDatabase();
-  const db = client.db('dobeunet'); // Database name
+  const db = client.db(DEFAULT_DB_NAME); // Database name
   
   // Verify database is accessible
   try {
@@ -126,7 +132,7 @@ export async function checkHealth(): Promise<{
   try {
     const db = await getDatabase();
     const collections = await db.listCollections().toArray();
-    
+
     return {
       connected: true,
       database: db.databaseName,
@@ -135,7 +141,7 @@ export async function checkHealth(): Promise<{
   } catch (error) {
     return {
       connected: false,
-      database: 'dobeunet',
+      database: DEFAULT_DB_NAME,
       collections: [],
       error: error instanceof Error ? error.message : String(error),
     };
