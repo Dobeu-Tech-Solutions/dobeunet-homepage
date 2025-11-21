@@ -17,7 +17,7 @@ export default function IntercomChat() {
     let cancelled = false;
 
     const bootIntercom = async () => {
-      if (cancelled || typeof window === 'undefined' || typeof document === 'undefined') {
+      if (cancelled || typeof window === 'undefined') {
         return;
       }
 
