@@ -9,7 +9,7 @@ import { startConnectionMonitoring } from './utils/connection-monitor';
 import { cleanupLegacyServiceWorkers } from './utils/legacy-service-worker-cleanup';
 
 if (import.meta.env.PROD) {
-  void cleanupLegacyServiceWorkers();
+  cleanupLegacyServiceWorkers().catch(console.error);
 }
 startConnectionMonitoring();
 
