@@ -10,11 +10,16 @@ import { startConnectionMonitoring } from './utils/connection-monitor';
 
 const enableHealthMonitor = import.meta.env.VITE_ENABLE_HEALTH_MONITOR === 'true';
 
-if (import.meta.env.PROD) {
+// Service worker should only be registered in production.
+const shouldRegisterServiceWorker = import.meta.env.PROD;
+// Health monitor can be enabled in production or when explicitly requested (e.g., for testing/staging).
+const shouldStartHealthMonitor = import.meta.env.PROD || enableHealthMonitor;
+
+if (shouldRegisterServiceWorker) {
   registerServiceWorker();
 }
 
-if (import.meta.env.PROD || enableHealthMonitor) {
+if (shouldStartHealthMonitor) {
   startConnectionMonitoring();
 }
 
