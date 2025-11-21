@@ -2,6 +2,13 @@ import { useEffect } from 'react';
 import Intercom from '@intercom/messenger-js-sdk';
 
 /**
+ * Delay (in milliseconds) before initializing Intercom.
+ * This ensures the page is fully interactive before loading the chat widget,
+ * preventing it from blocking initial page load and improving Core Web Vitals.
+ */
+const INTERCOM_INIT_DELAY_MS = 2000;
+
+/**
  * Intercom Chat Component
  *
  * Integrates Intercom Messenger for customer support and engagement.
@@ -21,7 +28,7 @@ export default function IntercomChat() {
         // Don't break the app if Intercom fails to load
         // Removed console.error to reduce noise in production
       }
-    }, 2000); // Delay 2 seconds to allow page to fully load
+    }, INTERCOM_INIT_DELAY_MS);
 
     return () => {
       clearTimeout(timeoutId);
