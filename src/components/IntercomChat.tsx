@@ -1,32 +1,49 @@
 import { useEffect } from 'react';
-import Intercom from '@intercom/messenger-js-sdk';
 
 /**
  * Intercom Chat Component
  *
  * Integrates Intercom Messenger for customer support and engagement.
- * Deferred initialization to avoid blocking page load.
+ * Dynamically imports Intercom SDK and defers initialization to avoid blocking page load.
+ * CRITICAL: Loaded asynchronously to prevent breaking the page if blocked by ad-blockers.
  */
 export default function IntercomChat() {
   useEffect(() => {
-    // Defer Intercom initialization until after page is interactive
-    const timeoutId = setTimeout(() => {
+    // Defer Intercom loading until after the page is fully interactive
+    // This prevents blocking the critical render path
+    const loadIntercom = async () => {
       try {
+        // Wait for page to be fully loaded before loading Intercom
+        if (document.readyState !== 'complete') {
+          await new Promise((resolve) => {
+            window.addEventListener('load', resolve, { once: true });
+          });
+        }
+
+        // Additional delay to ensure page is fully interactive
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        // Dynamically import Intercom SDK to avoid blocking main bundle
+        const { default: Intercom } = await import(
+          '@intercom/messenger-js-sdk'
+        );
+
         // Initialize Intercom with app ID
         Intercom({
           app_id: 'xu0gfiqb',
         });
       } catch {
         // Gracefully handle Intercom initialization errors
-        // Don't break the app if Intercom fails to load
-        // Removed console.error to reduce noise in production
+        // Don't break the app if Intercom fails to load or is blocked
+        // Silent failure - Intercom is non-critical
       }
-    }, 2000); // Delay 2 seconds to allow page to fully load
-
-    return () => {
-      clearTimeout(timeoutId);
     };
-  }, []);
+
+    // Start loading Intercom (non-blocking)
+    loadIntercom();
+
+    // No cleanup needed - Intercom handles its own lifecycle
+  }, []); // Empty dependency array ensures this runs only once
 
   // This component doesn't render anything visible
   // Intercom messenger appears as a widget on the page
