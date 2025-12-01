@@ -213,24 +213,6 @@ vercel env add LEAD_ALERT_WEBHOOK_URL
 
 **Note**: This project is configured for Netlify with serverless functions. If deploying to Vercel, you'll need to migrate the Netlify functions to Vercel's serverless function format.
 
-### Netlify Deployment
-```bash
-# Install Netlify CLI (if not installed)
-npm install -g netlify-cli
-
-# Login to Netlify
-netlify login
-
-# Initialize site (first time only)
-netlify init
-
-# Deploy to production
-netlify deploy --prod
-
-# Set environment variables via Netlify dashboard
-# Or use: netlify env:set MONGODB_URI "your_value"
-```
-
 ### Traditional Hosting (Static)
 ```bash
 # Build the project
