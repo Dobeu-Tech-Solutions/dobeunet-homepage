@@ -6,35 +6,7 @@ Your Dobeu Tech Solutions website is **production-ready**. Follow these quick st
 
 ---
 
-## Option 1: Deploy to Vercel (Recommended - 5 minutes)
-
-### Step 1: Install Vercel CLI
-```bash
-npm install -g vercel
-```
-
-### Step 2: Deploy
-```bash
-vercel --prod
-```
-
-### Step 3: Configure Environment Variables
-In Vercel Dashboard → Settings → Environment Variables, add:
-- `MONGODB_URI`
-- `MONGODB_DB_NAME`
-- `MONGODB_LEADS_COLLECTION`
-- `LEAD_ALERT_WEBHOOK_URL`
-
-### Step 4: Configure Custom Domain
-- Go to Settings → Domains
-- Add `dobeu.net`
-- Update your DNS records as instructed
-
-**Done!** Your site is live at https://dobeu.net
-
----
-
-## Option 2: Deploy to Netlify (5 minutes)
+## Deploy to Netlify (Recommended - 5 minutes)
 
 ### Step 1: Install Netlify CLI
 ```bash

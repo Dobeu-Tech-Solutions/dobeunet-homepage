@@ -46,28 +46,9 @@ npm run preview
 
 ## Deployment Options
 
-### Option 1: Vercel (Recommended)
+### Option 1: Netlify (Recommended)
 
-1. **Install Vercel CLI** (if not already installed):
-   ```bash
-   npm install -g vercel
-   ```
-
-2. **Deploy to Vercel**:
-   ```bash
-   vercel --prod
-   ```
-
-3. **Configure Custom Domain**:
-   - Go to Vercel Dashboard → Project Settings → Domains
-   - Add custom domain: `dobeu.net`
-   - Follow DNS configuration instructions
-
-4. **Configure Environment Variables**:
-   - Go to Settings → Environment Variables
-   - Add `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, `LEAD_ALERT_WEBHOOK_URL`
-
-### Option 2: Netlify
+This project is configured for Netlify with serverless functions in the `netlify/functions` directory.
 
 1. **Install Netlify CLI**:
    ```bash
@@ -86,6 +67,29 @@ npm run preview
 
 4. **Configure Environment Variables**:
    - Go to Site Settings → Build & Deploy → Environment
+   - Add `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, `LEAD_ALERT_WEBHOOK_URL`
+
+### Option 2: Vercel
+
+If you prefer to use Vercel instead of Netlify, note that you'll need to adapt the serverless functions from Netlify format to Vercel format.
+
+1. **Install Vercel CLI**:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy to Vercel**:
+   ```bash
+   vercel --prod
+   ```
+
+3. **Configure Custom Domain**:
+   - Go to Vercel Dashboard → Project Settings → Domains
+   - Add custom domain: `dobeu.net`
+   - Follow DNS configuration instructions
+
+4. **Configure Environment Variables**:
+   - Go to Settings → Environment Variables
    - Add `MONGODB_URI`, `MONGODB_DB_NAME`, `MONGODB_LEADS_COLLECTION`, `LEAD_ALERT_WEBHOOK_URL`
 
 ### Option 3: Traditional Web Server (Apache/Nginx)
@@ -198,9 +202,15 @@ npm run preview
 
 Configure your DNS records to point to your hosting provider:
 
-### For Vercel or Netlify:
-1. Add A record: `@` → Hosting provider's IP
-2. Add CNAME record: `www` → Hosting provider's domain
+### For Netlify:
+1. Add A record: `@` → Netlify's IP (or use Netlify's nameservers)
+2. Add CNAME record: `www` → `<your-site>.netlify.app`
+
+Netlify also supports using their DNS service for easier configuration.
+
+### For Vercel:
+1. Add A record: `@` → Vercel's IP
+2. Add CNAME record: `www` → Vercel's domain
 
 ### For Custom Server:
 1. Add A record: `@` → Your server IP address
@@ -278,10 +288,15 @@ Monitor website availability:
 
 If issues arise after deployment:
 
-### For Vercel/Netlify:
+### For Netlify:
+1. Go to Deploys tab in Netlify dashboard
+2. Find previous successful deployment
+3. Click "Publish deploy" to roll back
+
+### For Vercel:
 1. Go to deployments dashboard
 2. Find previous successful deployment
-3. Click "Rollback" or "Promote to Production"
+3. Click "Promote to Production"
 
 ### For Custom Server:
 1. Keep backup of previous `dist/` folder

@@ -55,8 +55,8 @@ LEAD_ALERT_WEBHOOK_URL=https://hooks.example.com/your-webhook
 ```
 
 **Where to set them:**
+- **Netlify** (Recommended): Site Settings → Build & Deploy → Environment
 - **Vercel**: Project Settings → Environment Variables
-- **Netlify**: Site Settings → Build & Deploy → Environment
 - **Traditional Hosting**: Create .env file on server (not in repo)
 
 ### 2. Domain Configuration
@@ -85,11 +85,11 @@ npm run build
 npm run preview
 
 # Deploy to production
-# For Vercel:
-vercel --prod
-
-# For Netlify:
+# For Netlify (recommended):
 netlify deploy --prod
+
+# For Vercel (if using Vercel instead):
+vercel --prod
 ```
 
 ### 6. Post-Deployment Testing
@@ -175,7 +175,25 @@ netlify deploy --prod
 
 ## 🚀 Deployment Commands
 
-### Vercel Deployment (Recommended)
+### Netlify Deployment (Recommended)
+```bash
+# Install Netlify CLI (if not installed)
+npm install -g netlify-cli
+
+# Login to Netlify
+netlify login
+
+# Initialize site (first time only)
+netlify init
+
+# Deploy to production
+netlify deploy --prod
+
+# Set environment variables via Netlify dashboard
+# Or use: netlify env:set MONGODB_URI "your_value"
+```
+
+### Vercel Deployment (Alternative)
 ```bash
 # Install Vercel CLI (if not installed)
 npm install -g vercel
@@ -193,23 +211,7 @@ vercel env add MONGODB_LEADS_COLLECTION
 vercel env add LEAD_ALERT_WEBHOOK_URL
 ```
 
-### Netlify Deployment
-```bash
-# Install Netlify CLI (if not installed)
-npm install -g netlify-cli
-
-# Login to Netlify
-netlify login
-
-# Initialize site (first time only)
-netlify init
-
-# Deploy to production
-netlify deploy --prod
-
-# Set environment variables via Netlify dashboard
-# Or use: netlify env:set MONGODB_URI "your_value"
-```
+**Note**: This project is configured for Netlify with serverless functions. If deploying to Vercel, you'll need to migrate the Netlify functions to Vercel's serverless function format.
 
 ### Traditional Hosting (Static)
 ```bash
